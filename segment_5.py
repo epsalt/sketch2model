@@ -1,7 +1,7 @@
+from io import BytesIO
 import numpy as np
 import scipy as sp
 import matplotlib.pyplot as plt
-from PIL import Image
 from skimage import io, color, segmentation, exposure, img_as_float, feature
 from skimage.filters import roberts, sobel, scharr, threshold_otsu, rank, threshold_adaptive
 from skimage.util import img_as_ubyte
@@ -186,11 +186,14 @@ def sketch2model(sketch, model):
     for x,y in zip(index[0], index[1]):
         newest[x,y] = closest(x,y, interim, w/4, np.arange(n2)+1) # changed "cr" to "w/4", "N" to "n2"
            
-    # plot and save as .png
+    # plot and save in memory
     fig = plt.figure(figsize=(12, 12))
     ax = fig.add_subplot(1, 1, 1)
     plt.imshow(newest, cmap='Dark2')
     ax.set_xticks([])
     ax.set_yticks([])
-    plt.savefig(model, dpi=300, bbox_inches='tight', pad_inches=0)
+    buf = BytesIO()
+    plt.savefig(buf, dpi=300, bbox_inches='tight', pad_inches=0)
+    buf.seek(0)
+    return(buf)
                     
