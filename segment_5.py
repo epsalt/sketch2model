@@ -8,7 +8,7 @@ from skimage.util import img_as_ubyte
 from skimage.morphology import disk, opening, dilation, closing, erosion, skeletonize, remove_small_objects, white_tophat, black_tophat
 from skimage.measure import label
 
-def sketch2model(sketch, model):
+def sketch2model(sketch):
     im = io.imread(sketch)
     im = color.rgb2gray(im[0:-1:2,0:-1:2])
     
