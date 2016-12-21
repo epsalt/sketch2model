@@ -37,7 +37,8 @@ class Sketch2Model:
 
         ## Label regions
         clean_border = segmentation.clear_border(self.skeletonized)
-        self.labeled = measure.label(clean_border, background = 999999) + 1
+        self.labeled, self.nregions = measure.label(clean_border, background = 999999, return_num=True)
+        self.labeled = self.labeled + 1
 
         ## Change border region labels to zero for random walker
         ## segmentation in next step
