@@ -1,13 +1,10 @@
-import io
-import PIL
 import numpy as np
 import scipy as sp
-import matplotlib.pyplot as plt
 from skimage import color, exposure, morphology, measure, segmentation
 
 class Sketch2Model:
-    def __init__(self, buf):
-        self.initial_image = load_image(buf)
+    def __init__(self, im):
+        self.initial_image = np.asarray(im)
         self.process()
         
     def process(self):
@@ -48,31 +45,3 @@ class Sketch2Model:
 
         ## Segmentation of border pixels
         self.final = segmentation.random_walker(self.skeletonized, self.labeled, beta=1,  mode='cg_mg')
-
-def load_image(buf):
-    """Load image from buffer into numpy array"""
-    img_bytes = buf.read()
-    pil_image = PIL.Image.open(io.BytesIO(img_bytes))
-    return(np.asarray(pil_image))
-
-def save(self, im, cmap):
-    """Save image to a buffer"""
-    fig = plt.figure(figsize=(12, 12))
-    ax = fig.add_subplot(1, 1, 1)
-    plt.imshow(im, cmap)
-    ax.set_xticks([])
-    ax.set_yticks([])
-    plt.show()
-    buf = io.BytesIO()
-    plt.savefig(buf, dpi=300, bbox_inches='tight', pad_inches=0)
-    buf.seek(0)
-    return(buf)
-
-def plt_image(im, cmap='gray'):
-    """plot image using matplotlib"""
-    fig = plt.figure(figsize=(12, 12))
-    ax = fig.add_subplot(1, 1, 1)
-    plt.imshow(im, cmap)
-    ax.set_xticks([])
-    ax.set_yticks([])
-    plt.show()
