@@ -3,11 +3,11 @@ import scipy as sp
 from skimage import color, exposure, morphology, measure, segmentation
 
 class Sketch2Model:
-    def __init__(self, im):
+    def __init__(self, im, contrast=0.5, closing=5):
         self.initial_image = np.asarray(im)
-        self.process()
+        self.process(contrast, closing)
         
-    def process(self):
+    def process(self, contrast, closing):
         """Sketch2Model uses morphological filtering to label regions in a
         hollow sketch and assign them discrete labels"""
         
@@ -21,11 +21,11 @@ class Sketch2Model:
         self.contrasted = exposure.rescale_intensity(self.compressed, in_range=(p2, p98))
 
         ## Binarization with scalar threshold           
-        self.binary = ~(color.rgb2gray(self.contrasted) > 0.5)
-
+        self.binary = ~(color.rgb2gray(self.contrasted) > contrast)
+        
         ## Use binary closing to connect lines that aren't
         ## completely crossing
-        self.closed = morphology.binary_closing(self.binary)
+        self.closed = morphology.binary_closing(self.binary, morphology.disk(closing))
 
         ## Remove small objects (bright and dark spots)
         removed = morphology.remove_small_objects(self.closed)
